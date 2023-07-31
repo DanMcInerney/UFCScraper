@@ -1,5 +1,5 @@
 import scrapy
-from scrapy_splash import SplashRequest
+import numpy as np
 
 class UfcScraper(scrapy.Spider):
     name = 'ufc_scraper'
@@ -52,7 +52,13 @@ class UfcScraper(scrapy.Spider):
         # Strip whitespace from the fighter names
         fighters = [fighter.strip() for fighter in fighters]
 
-        # Extract the fight method, round, time, time format, referee, and details
+        # Extract the fight weightclass, method, round, time, time format, referee, and details
+        # Perf of the night, sub of the night, other stuff adds elements to the Xpath
+        weight_class = ''
+        elem = 0
+        while weight_class == '':
+            weight_class = response.xpath('/html/body/section/div/div/div[2]/div[1]/i/text()')[elem].get().strip()
+            elem += 1
         method = response.xpath(
             '//i[contains(text(), "Method:")]/following-sibling::i[@style="font-style: normal"]/text()').get().strip()
         round = response.xpath('//i[contains(text(), "Round:")]/following-sibling::text()').get().strip()
@@ -64,6 +70,7 @@ class UfcScraper(scrapy.Spider):
         fight_data.update({
             'fighter': fighters[0],
             'opponent': fighters[1],
+            'weightclass': weight_class,
             'method': method,
             'round': round,
             'time': time,
@@ -85,9 +92,9 @@ class UfcScraper(scrapy.Spider):
 
         # Call the function for each section
         # Totals
-        fight_data_1 = self.parse_section('/html/body/section/div/div/section[3]', response)
+        fight_data_1 = self.parse_section('/html/body/section/div/div/section[3]/table', response, round)
         # Significant strikes
-        fight_data_2 = self.parse_section('/html/body/section/div/div/section[5]', response)
+        fight_data_2 = self.parse_section('/html/body/section/div/div/section[5]/table', response, round)
 
         # Merge the two dictionaries into the existing fight_data dictionary
         fight_data.update(fight_data_1)
@@ -95,7 +102,7 @@ class UfcScraper(scrapy.Spider):
 
         yield fight_data
 
-    def parse_section(self, section_xpath, response):
+    def parse_section(self, section_xpath, response, round):
         section = response.xpath(section_xpath)
         row_elements = section.xpath('.//tr[@class="b-fight-details__table-row"]')
 
@@ -118,19 +125,19 @@ class UfcScraper(scrapy.Spider):
                                                        '_')  # Remove periods and replace spaces with underscores
                     if '%' not in key:  # Skip keys with '%'
                         fight_data[key] = stat
-        return fight_data
 
-    # def parse_fighter(self, response):
-    #     # Parse fighter info
-    #     fighter_data = {}
-    #     name = response.css('span.b-content__title-highlight::text').get().strip()
-    #     fighter_data['url'] = response.url
-    #
-    #     # Extract other fighter data such as date of birth, weight, reach, height, etc.
-    #     fighter_data['dob'] = response.xpath('//i[contains(text(), "DOB:")]/following-sibling::text()').get().strip()
-    #     fighter_data['weight'] = response.xpath('//i[contains(text(), "Weight:")]/following-sibling::text()').get().strip()
-    #     fighter_data['reach'] = response.xpath('//i[contains(text(), "Reach:")]/following-sibling::text()').get().strip()
-    #     fighter_data['height'] = response.xpath('//i[contains(text(), "Height:")]/following-sibling::text()').get().strip()
-    #     fighter_data['stance'] = response.xpath('//i[contains(text(), "Stance:")]/following-sibling::text()').get().strip()
-    #
-    #     self.fighter_data[name] = fighter_data
+        # Fill in empty round stats with NaN
+        fight_data_up_to_rd5 = {}
+        round_1_keys = [key for key in fight_data.keys() if '_rd1_' in key]
+        for k in round_1_keys:
+            for i in range(1, 6):
+                key = k.replace('rd1', 'rd' + str(i))
+                # Put the data in the fight_data_up_to_rd5 dictionary
+                if key in fight_data.keys():
+                    fight_data_up_to_rd5[key] = fight_data[key]
+                # Add in NaNs for rounds that don't exist up to round 5
+                else:
+                    fight_data_up_to_rd5[key] = np.nan
+
+        return fight_data_up_to_rd5
+
