@@ -53,12 +53,15 @@ class UfcScraper(scrapy.Spider):
         fighters = [fighter.strip() for fighter in fighters]
 
         # Extract the fight weightclass, method, round, time, time format, referee, and details
+
         # Perf of the night, sub of the night, other stuff adds elements to the Xpath
         weight_class = ''
         elem = 0
         while weight_class == '':
             weight_class = response.xpath('/html/body/section/div/div/div[2]/div[1]/i/text()')[elem].get().strip()
             elem += 1
+
+        result = response.xpath('/html/body/section/div/div/div[1]/div[1]/i/text()').get().strip()
         method = response.xpath(
             '//i[contains(text(), "Method:")]/following-sibling::i[@style="font-style: normal"]/text()').get().strip()
         round = response.xpath('//i[contains(text(), "Round:")]/following-sibling::text()').get().strip()
@@ -68,8 +71,9 @@ class UfcScraper(scrapy.Spider):
 
         # Flatten the details and add them to the fight data
         fight_data.update({
-            'fighter': fighters[0],
-            'opponent': fighters[1],
+            'result': result,
+            'player1': fighters[0],
+            'player2': fighters[1],
             'weightclass': weight_class,
             'method': method,
             'round': round,
@@ -120,7 +124,7 @@ class UfcScraper(scrapy.Spider):
             # Flatten the data
             for j, fighter in enumerate(fighter_names):
                 for k, stat in enumerate(data_columns[j::2]):
-                    key = ('f' if j == 0 else 'o') + '_rd' + str(i + 1) + '_' + column_names[k]
+                    key = ('p1' if j == 0 else 'p2') + '_rd' + str(i + 1) + '_' + column_names[k]
                     key = key.replace('.', '').replace(' ',
                                                        '_')  # Remove periods and replace spaces with underscores
                     if '%' not in key:  # Skip keys with '%'
