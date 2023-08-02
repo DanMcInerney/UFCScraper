@@ -113,7 +113,12 @@ class UfcScraper(scrapy.Spider):
         # Get column names from the first row
         column_names = row_elements[0].xpath('./th/text()').getall()
         column_names = [name.strip() for name in column_names if name.strip() != '']  # Strip white spaces
-        column_names = column_names[1:]  # Skip 'Fighter' column
+        column_names = column_names[1:]
+
+        # There's a bug in the site where it labels "Td" as "Td %" in the round by round table labels
+        if column_names.count("Td %") > 1:
+            index_to_replace = column_names.index("Td %")  # finds the first occurrence
+            column_names[index_to_replace] = "Td"
 
         fight_data = {}
         for i, row_element in enumerate(row_elements[1:]):  # Skip header row
@@ -125,8 +130,7 @@ class UfcScraper(scrapy.Spider):
             for j, fighter in enumerate(fighter_names):
                 for k, stat in enumerate(data_columns[j::2]):
                     key = ('p1' if j == 0 else 'p2') + '_rd' + str(i + 1) + '_' + column_names[k]
-                    key = key.replace('.', '').replace(' ',
-                                                       '_')  # Remove periods and replace spaces with underscores
+                    key = key.replace('.', '').replace(' ','_')  # Remove periods and replace spaces with underscores
                     if '%' not in key:  # Skip keys with '%'
                         fight_data[key] = stat
 

@@ -4,133 +4,142 @@ import numpy as np
 import csv
 
 @pytest.fixture(scope="module")
-def fights_csv():
-    f = open('C:/Users/danhm/PycharmProjects/UFCScraper/UFCScraper.csv', 'r')
-    csvreader = csv.reader(f)
-    return csvreader
-
+def master():
+    f = open('C:/Users/danhm/PycharmProjects/UFCScraper/UFCScraper/master.csv', 'r')
+    master = pd.read_csv(f)
+    return master
 @pytest.fixture(scope="module")
-def test_headers(fights_csv):
-    correct_headers = {"f_rd1_Body",
-"f_rd1_Clinch",
-"f_rd1_Ctrl",
-f_rd1_Distance",
-f_rd1_Ground",
-f_rd1_Head",
-f_rd1_KD",
-f_rd1_Leg",
-f_rd1_Rev",
-f_rd1_Sig_str",
-f_rd1_Sub_att",
-f_rd1_Total_str",
-f_rd2_Body",
-f_rd2_Clinch",
-f_rd2_Ctrl",
-f_rd2_Distance",
-f_rd2_Ground",
-f_rd2_Head",
-f_rd2_KD",
-f_rd2_Leg",
-f_rd2_Rev",
-f_rd2_Sig_str",
-f_rd2_Sub_att",
-f_rd2_Total_str",
-f_rd3_Body",
-f_rd3_Clinch",
-f_rd3_Ctrl",
-f_rd3_Distance",
-f_rd3_Ground",
-f_rd3_Head",
-f_rd3_KD",
-f_rd3_Leg",
-f_rd3_Rev",
-f_rd3_Sig_str",
-f_rd3_Sub_att",
-f_rd3_Total_str",
-f_rd4_Body",
-f_rd4_Clinch",
-f_rd4_Ctrl",
-f_rd4_Distance",
-f_rd4_Ground",
-f_rd4_Head",
-f_rd4_KD",
-f_rd4_Leg",
-f_rd4_Rev",
-f_rd4_Sig_str",
-f_rd4_Sub_att",
-f_rd4_Total_str",
-f_rd5_Body",
-f_rd5_Clinch",
-f_rd5_Ctrl",
-f_rd5_Distance",
-f_rd5_Ground",
-f_rd5_Head",
-f_rd5_KD",
-f_rd5_Leg",
-f_rd5_Rev",
-f_rd5_Sig_str",
-f_rd5_Sub_att",
-f_rd5_Total_str",
-o_rd1_Body",
-o_rd1_Clinch",
-o_rd1_Ctrl",
-o_rd1_Distance",
-o_rd1_Ground",
-o_rd1_Head",
-o_rd1_KD",
-o_rd1_Leg",
-o_rd1_Rev",
-o_rd1_Sig_str",
-o_rd1_Sub_att",
-o_rd1_Total_str",
-o_rd2_Body",
-o_rd2_Clinch",
-o_rd2_Ctrl",
-o_rd2_Distance",
-o_rd2_Ground",
-o_rd2_Head",
-o_rd2_KD",
-o_rd2_Leg",
-o_rd2_Rev",
-o_rd2_Sig_str",
-o_rd2_Sub_att",
-o_rd2_Total_str",
-o_rd3_Body",
-o_rd3_Clinch",
-o_rd3_Ctrl",
-o_rd3_Distance",
-o_rd3_Ground",
-o_rd3_Head",
-o_rd3_KD",
-o_rd3_Leg",
-o_rd3_Rev",
-o_rd3_Sig_str",
-o_rd3_Sub_att",
-o_rd3_Total_str",
-o_rd4_Body",
-o_rd4_Clinch",
-o_rd4_Ctrl",
-o_rd4_Distance",
-o_rd4_Ground",
-o_rd4_Head",
-o_rd4_KD",
-o_rd4_Leg",
-o_rd4_Rev",
-o_rd4_Sig_str",
-o_rd4_Sub_att",
-o_rd4_Total_str",
-o_rd5_Body",
-o_rd5_Clinch",
-o_rd5_Ctrl",
-o_rd5_Distance",
-o_rd5_Ground",
-o_rd5_Head",
-o_rd5_KD",
-o_rd5_Leg",
-o_rd5_Rev",
-o_rd5_Sig_str",
-o_rd5_Sub_att",
-o_rd5_Total_str","
-headers = next(fights_csv)
-    return headers
+def fight(master, 'Brandon Moreno', 'Alexandre Pantoja'):
+    fight = master.loc[(master['player1'] == 'Brandon Moreno' & master['player2'] == 'Alexandre Pantoja')]
+    return fight
+@pytest.fixture(scope="module")
+def correct_headers():
+    correct_headers = {
+    "p1_height": '5\'7"'
+    "p1_reach":
+    "p1_rd1_Body":
+    "p1_rd1_Clinch":
+    "p1_rd1_Ctrl":
+    "p1_rd1_Distance":
+    "p1_rd1_Ground":
+    "p1_rd1_Head":
+    "p1_rd1_KD":
+    "p1_rd1_Leg":
+    "p1_rd1_Rev":
+    "p1_rd1_Sig_str":
+    "p1_rd1_Sub_att":
+    "p1_rd1_Total_str":
+    "p1_rd2_Body":
+    "p1_rd2_Clinch":
+    "p1_rd2_Ctrl":
+    "p1_rd2_Distance":
+    "p1_rd2_Ground":
+    "p1_rd2_Head":
+    "p1_rd2_KD":
+    "p1_rd2_Leg":
+    "p1_rd2_Rev":
+    "p1_rd2_Sig_str":
+    "p1_rd2_Sub_att":
+    "p1_rd2_Total_str":
+    "p1_rd3_Body":
+    "p1_rd3_Clinch":
+    "p1_rd3_Ctrl":
+    "p1_rd3_Distance":
+    "p1_rd3_Ground":
+    "p1_rd3_Head":
+    "p1_rd3_KD":
+    "p1_rd3_Leg":
+    "p1_rd3_Rev":
+    "p1_rd3_Sig_str":
+    "p1_rd3_Sub_att":
+    "p1_rd3_Total_str":
+    "p1_rd4_Body":
+    "p1_rd4_Clinch":
+    "p1_rd4_Ctrl":
+    "p1_rd4_Distance":
+    "p1_rd4_Ground":
+    "p1_rd4_Head":
+    "p1_rd4_KD":
+    "p1_rd4_Leg":
+    "p1_rd4_Rev":
+    "p1_rd4_Sig_str":
+    "p1_rd4_Sub_att":
+    "p1_rd4_Total_str":
+    "p1_rd5_Body":
+    "p1_rd5_Clinch":
+    "p1_rd5_Ctrl":
+    "p1_rd5_Distance":
+    "p1_rd5_Ground":
+    "p1_rd5_Head":
+    "p1_rd5_KD":
+    "p1_rd5_Leg":
+    "p1_rd5_Rev":
+    "p1_rd5_Sig_str":
+    "p1_rd5_Sub_att":
+    "p1_rd5_Total_str":
+    "p2_rd1_Body":
+    "p2_rd1_Clinch":
+    "p2_rd1_Ctrl":
+    "p2_rd1_Distance":
+    "p2_rd1_Ground":
+    "p2_rd1_Head":
+    "p2_rd1_KD":
+    "p2_rd1_Leg":
+    "p2_rd1_Rev":
+    "p2_rd1_Sig_str":
+    "p2_rd1_Sub_att":
+    "p2_rd1_Total_str":
+    "p2_rd2_Body":
+    "p2_rd2_Clinch":
+    "p2_rd2_Ctrl":
+    "p2_rd2_Distance":
+    "p2_rd2_Ground":
+    "p2_rd2_Head":
+    "p2_rd2_KD":
+    "p2_rd2_Leg":
+    "p2_rd2_Rev":
+    "p2_rd2_Sig_str":
+    "p2_rd2_Sub_att":
+    "p2_rd2_Total_str":
+    "p2_rd3_Body":
+    "p2_rd3_Clinch":
+    "p2_rd3_Ctrl":
+    "p2_rd3_Distance":
+    "p2_rd3_Ground":
+    "p2_rd3_Head":
+    "p2_rd3_KD":
+    "p2_rd3_Leg":
+    "p2_rd3_Rev":
+    "p2_rd3_Sig_str":
+    "p2_rd3_Sub_att":
+    "p2_rd3_Total_str":
+    "p2_rd4_Body":
+    "p2_rd4_Clinch":
+    "p2_rd4_Ctrl":
+    "p2_rd4_Distance":
+    "p2_rd4_Ground":
+    "p2_rd4_Head":
+    "p2_rd4_KD":
+    "p2_rd4_Leg":
+    "p2_rd4_Rev":
+    "p2_rd4_Sig_str":
+    "p2_rd4_Sub_att":
+    "p2_rd4_Total_str":
+    "p2_rd5_Body":
+    "p2_rd5_Clinch":
+    "p2_rd5_Ctrl":
+    "p2_rd5_Distance":
+    "p2_rd5_Ground":
+    "p2_rd5_Head":
+    "p2_rd5_KD":
+    "p2_rd5_Leg":
+    "p2_rd5_Rev":
+    "p2_rd5_Sig_str":
+    "p2_rd5_Sub_att":
+    "p2_rd5_Total_str":
+    "p2_height":
+    "p2_reach":
+    }
+
+    assert correct_headers in fight.columns
 
