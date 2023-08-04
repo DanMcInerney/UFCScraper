@@ -20,6 +20,8 @@ class UfcFighterScraper(scrapy.Spider):
     def parse_fighter(self, response):
         fighter_data = {}
         fighter_data['name'] = response.css('span.b-content__title-highlight::text').get().strip()
+        # Remove " from nickname to match fight scraper
+        fighter_data['nickname'] = response.xpath('/html/body/section/div/p/text()').get().strip().replace('"', '')
         fighter_data['url'] = response.url
 
         # Extract other fighter data such as date of birth, weight, reach, height, etc.
@@ -28,5 +30,4 @@ class UfcFighterScraper(scrapy.Spider):
         fighter_data['reach'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "reach:")]/following-sibling::text()').get().strip()
         fighter_data['height'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "height:")]/following-sibling::text()').get().strip()
         fighter_data['stance'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "stance:")]/following-sibling::text()').get().strip()
-
         yield fighter_data

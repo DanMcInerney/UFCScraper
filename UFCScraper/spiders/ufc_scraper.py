@@ -68,6 +68,9 @@ class UfcScraper(scrapy.Spider):
         time = response.xpath('//i[contains(text(), "Time:")]/following-sibling::text()').get().strip()
         time_format = response.xpath('//i[contains(text(), "Time format:")]/following-sibling::text()').get().strip()
         referee = response.xpath('//i[contains(text(), "Referee:")]/following-sibling::span/text()').get().strip()
+        # Remove " marks from beginning and end of string to match individuals.csv nickname
+        player1_nickname = response.xpath('/html/body/section/div/div/div[1]/div[1]/div/p/text()').get().strip().replace('"', '')
+        player2_nickname = response.xpath('/html/body/section/div/div/div[1]/div[2]/div/p/text()').get().strip().replace('"', '')
 
         # Flatten the details and add them to the fight data
         fight_data.update({
@@ -80,6 +83,8 @@ class UfcScraper(scrapy.Spider):
             'time': time,
             'time_format': time_format,
             'referee': referee,
+            'player1_nickname': player1_nickname,
+            'player2_nickname': player2_nickname
         })
 
         # Get the event date and location from the meta data
