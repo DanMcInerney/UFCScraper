@@ -71,6 +71,11 @@ class UfcScraper(scrapy.Spider):
         # Remove " marks from beginning and end of string to match individuals.csv nickname
         player1_nickname = response.xpath('/html/body/section/div/div/div[1]/div[1]/div/p/text()').get().strip().replace('"', '')
         player2_nickname = response.xpath('/html/body/section/div/div/div[1]/div[2]/div/p/text()').get().strip().replace('"', '')
+        # Conditionally assign '--' only if player1_nickname or player2_nickname is empty
+        if len(player1_nickname) == 0:
+            player1_nickname = '--'
+        if len(player2_nickname) == 0:
+            player2_nickname = '--'
 
         # Flatten the details and add them to the fight data
         fight_data.update({

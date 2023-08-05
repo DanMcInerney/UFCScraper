@@ -3,6 +3,9 @@ import scrapy
 class UfcFighterScraper(scrapy.Spider):
     name = 'ufc_fighter_scraper'
     allowed_domains = ['ufcstats.com']
+    custom_settings = {
+        'DOWNLOAD_DELAY': .5
+    }
 
     def start_requests(self):
         base_url = 'http://ufcstats.com/statistics/fighters?char='
@@ -22,6 +25,9 @@ class UfcFighterScraper(scrapy.Spider):
         fighter_data['name'] = response.css('span.b-content__title-highlight::text').get().strip()
         # Remove " from nickname to match fight scraper
         fighter_data['nickname'] = response.xpath('/html/body/section/div/p/text()').get().strip().replace('"', '')
+        # If there is no nickname, then replace it with '--'
+        if len(fighter_data['nickname']) == 0:
+            fighter_data['nickname'] = '--'
         fighter_data['url'] = response.url
 
         # Extract other fighter data such as date of birth, weight, reach, height, etc.
