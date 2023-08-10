@@ -68,10 +68,20 @@ class UfcScraper(scrapy.Spider):
         time = response.xpath('//i[contains(text(), "Time:")]/following-sibling::text()').get().strip()
         time_format = response.xpath('//i[contains(text(), "Time format:")]/following-sibling::text()').get().strip()
         referee = response.xpath('//i[contains(text(), "Referee:")]/following-sibling::span/text()').get().strip()
+
+        # This gets the details if the fight was a finish
+        details = response.xpath('//i[contains(text(), "Details:")]/ancestor::p[1]/text()').getall()[1].strip()
+        # If it wasn't a finish, then we get the judges names and scores
+        if details == '':
+            details_nodes = response.css('i:contains("Details:") ~ i.b-fight-details__text-item')
+            details = " ".join(
+                [text.strip() for node in details_nodes for text in node.css('::text').getall() if text.strip()])
+
         # Remove " marks from beginning and end of string to match individuals.csv nickname
         player1_nickname = response.xpath('/html/body/section/div/div/div[1]/div[1]/div/p/text()').get().strip().replace('"', '')
         player2_nickname = response.xpath('/html/body/section/div/div/div[1]/div[2]/div/p/text()').get().strip().replace('"', '')
-        # Conditionally assign '--' only if player1_nickname or player2_nickname is empty
+        # Conditionally assign '--' only if player1_nickname or player2_nickname is empty so it doesn't get assigned as
+        # NaN which messes with pd.merge
         if len(player1_nickname) == 0:
             player1_nickname = '--'
         if len(player2_nickname) == 0:
@@ -88,6 +98,7 @@ class UfcScraper(scrapy.Spider):
             'time': time,
             'time_format': time_format,
             'referee': referee,
+            'details': details,
             'player1_nickname': player1_nickname,
             'player2_nickname': player2_nickname
         })
