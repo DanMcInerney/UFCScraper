@@ -68,6 +68,8 @@ class UfcScraper(scrapy.Spider):
         time = response.xpath('//i[contains(text(), "Time:")]/following-sibling::text()').get().strip()
         time_format = response.xpath('//i[contains(text(), "Time format:")]/following-sibling::text()').get().strip()
         referee = response.xpath('//i[contains(text(), "Referee:")]/following-sibling::span/text()').get().strip()
+        player1_url = response.xpath('/html/body/section/div/div/div[1]/div[1]/div/h3/a/@href').get().strip()
+        player2_url = response.xpath('/html/body/section/div/div/div[1]/div[2]/div/h3/a/@href').get().strip()
 
         # This gets the details if the fight was a finish
         details = response.xpath('//i[contains(text(), "Details:")]/ancestor::p[1]/text()').getall()[1].strip()
@@ -92,6 +94,8 @@ class UfcScraper(scrapy.Spider):
             'result': result,
             'player1': fighters[0],
             'player2': fighters[1],
+            'player1_url': player1_url,
+            'player2_url': player2_url,
             'weightclass': weight_class,
             'method': method,
             'round': round,
