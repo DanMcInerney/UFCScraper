@@ -1,11 +1,13 @@
 import scrapy
+import pandas as pd
 
 class UfcFighterScraper(scrapy.Spider):
     name = 'ufc_fighter_scraper'
     allowed_domains = ['ufcstats.com']
-    custom_settings = {
-        'DOWNLOAD_DELAY': .5
-    }
+    #fighter_df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\UFCScraper\\individuals.csv')
+    # custom_settings = {
+    #     'DOWNLOAD_DELAY': .5
+    # }
 
     def start_requests(self):
         base_url = 'http://ufcstats.com/statistics/fighters?char='
@@ -28,9 +30,9 @@ class UfcFighterScraper(scrapy.Spider):
         # If there is no nickname, then replace it with '--'
         if len(fighter_data['nickname']) == 0:
             fighter_data['nickname'] = '--'
-        fighter_data['url'] = response.url
 
         # Extract other fighter data such as date of birth, weight, reach, height, etc.
+        fighter_data['url'] = response.url
         fighter_data['dob'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "dob:")]/following-sibling::text()').get().strip()
         fighter_data['weight'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "weight:")]/following-sibling::text()').get().strip()
         fighter_data['reach'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "reach:")]/following-sibling::text()').get().strip()
