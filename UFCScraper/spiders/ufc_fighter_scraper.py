@@ -2,9 +2,10 @@ import scrapy
 import pandas as pd
 
 class UfcFighterScraper(scrapy.Spider):
+    # MUST DELETE THE HEADERS ON NEW SCRAPE
     name = 'ufc_fighter_scraper'
     allowed_domains = ['ufcstats.com']
-    #fighter_df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\UFCScraper\\individuals.csv')
+    fighter_df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\UFCScraper\\UFCScraper\\individuals.csv')
     # custom_settings = {
     #     'DOWNLOAD_DELAY': .5
     # }
@@ -20,7 +21,8 @@ class UfcFighterScraper(scrapy.Spider):
     def parse(self, response):
         fighter_links = response.css('td.b-statistics__table-col a::attr(href)').getall()
         for fighter_link in fighter_links:
-            yield scrapy.Request(fighter_link, callback=self.parse_fighter)
+            if fighter_link not in self.fighter_df['url'].values:
+                yield scrapy.Request(fighter_link, callback=self.parse_fighter)
 
     def parse_fighter(self, response):
         fighter_data = {}

@@ -1,11 +1,13 @@
 import scrapy
 import numpy as np
+import pandas as pd
 
 class UfcScraper(scrapy.Spider):
+    # MUST DELETE THE HEADERS ON NEW SCRAPE
     name = 'ufc_scraper'
     allowed_domains = ['ufcstats.com']
     start_urls = ['http://ufcstats.com/statistics/events/completed?page=all']
-    #fight_df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\UFCScraper\\competitions.csv')
+    fight_df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\UFCScraper\\UFCScraper\\competitions.csv')
 
     def start_requests(self):
         for url in self.start_urls:
@@ -22,7 +24,8 @@ class UfcScraper(scrapy.Spider):
 
             event_link = event.css('i.b-statistics__table-content a::attr(href)').get()
             if event_link:
-                yield scrapy.Request(event_link, callback=self.parse_event)
+                if event_link not in self.fight_df['event_url'].values:
+                    yield scrapy.Request(event_link, callback=self.parse_event)
 
     def parse_event(self, response):
         # Extract the event date and location
