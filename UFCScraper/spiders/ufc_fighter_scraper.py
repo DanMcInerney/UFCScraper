@@ -1,5 +1,18 @@
 import scrapy
 import pandas as pd
+from scrapy.exporters import CsvItemExporter
+
+
+class HeadlessCsvItemExporter(CsvItemExporter):
+
+    def __init__(self, *args, **kwargs):
+
+        # args[0] is (opened) file handler
+        # if file is not empty then skip headers
+        if args[0].tell() > 0:
+            kwargs['include_headers_line'] = False
+
+        super(HeadlessCsvItemExporter, self).__init__(*args, **kwargs)
 
 class UfcFighterScraper(scrapy.Spider):
     # MUST DELETE THE HEADERS ON NEW SCRAPE
@@ -40,4 +53,6 @@ class UfcFighterScraper(scrapy.Spider):
         fighter_data['reach'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "reach:")]/following-sibling::text()').get().strip()
         fighter_data['height'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "height:")]/following-sibling::text()').get().strip()
         fighter_data['stance'] = response.xpath('//i[contains(translate(text(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "stance:")]/following-sibling::text()').get().strip()
+        if len(fighter_data['stance']) == 0:
+            fighter_data['stance'] = '--'
         yield fighter_data
