@@ -18,7 +18,7 @@ class UfcFighterScraper(scrapy.Spider):
     # MUST DELETE THE HEADERS ON NEW SCRAPE
     name = 'ufc_fighter_scraper'
     allowed_domains = ['ufcstats.com']
-    fighter_df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\UFCScraper\\UFCScraper\\individuals.csv')
+    fighter_df = pd.read_csv('individuals.csv')
     # custom_settings = {
     #     'DOWNLOAD_DELAY': .5
     # }

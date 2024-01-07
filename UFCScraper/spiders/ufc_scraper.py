@@ -18,7 +18,7 @@ class UfcScraper(scrapy.Spider):
     name = 'ufc_scraper'
     allowed_domains = ['ufcstats.com']
     start_urls = ['http://ufcstats.com/statistics/events/completed?page=all']
-    fight_df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\UFCScraper\\UFCScraper\\competitions.csv')
+    fight_df = pd.read_csv('competitions.csv')
 
     def start_requests(self):
         for url in self.start_urls:
