@@ -13,16 +13,17 @@ class BfoScraper(scrapy.Spider):
     name = "bfo_scraper"
     allowed_domains = ['bestfightodds.com']
 
-    df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\mmaai\\masterML.csv')
-
-    unique_players1 = df['player1'].unique().tolist()
-    unique_players2 = df['player2'].unique().tolist()
-    all_unique_players = list(set(unique_players1 + unique_players2))
-    test = all_unique_players[0:1] ############
+    # REMOVING so other scrapers work when masterML doesn't exist
+    # df = pd.read_csv('C:\\Users\\danhm\\PycharmProjects\\mmaai\\masterML.csv')
+    #
+    # unique_players1 = df['player1'].unique().tolist()
+    # unique_players2 = df['player2'].unique().tolist()
+    # all_unique_players = list(set(unique_players1 + unique_players2))
+    # test = all_unique_players[0:1]
 
     # Form the starting URLs
     #start_urls = [f'https://www.bestfightodds.com/search?query={f}' for f in all_unique_players]
-    start_urls = [f'https://www.bestfightodds.com/search?query={f}' for f in test]
+    #start_urls = [f'https://www.bestfightodds.com/search?query={f}' for f in test]
 
     # User agents list
     USER_AGENTS = [
