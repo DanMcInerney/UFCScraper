@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Scrapy: UFC Spider",
+            "type": "python",
+            "request": "launch",
+            "module": "scrapy",
+            "args": [
+                "crawl",
+                "ufc_scraper",
+                "-o",
+                "competitions.csv"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "justMyCode": false
+        },
+        {
+            "name": "Scrapy: UFC Spider (with DEBUG)",
+            "type": "python",
+            "request": "launch",
+            "module": "scrapy",
+            "args": [
+                "crawl",
+                "ufc_scraper",
+                "-o",
+                "competitions.csv",
+                "-L",
+                "DEBUG"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "justMyCode": false
+        }
+    ]
+} 
